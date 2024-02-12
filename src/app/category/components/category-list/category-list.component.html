@@ -1,0 +1,20 @@
+<h2>Categories</h2>
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <!-- Leaf nodes -->
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="20">
+    <mat-button-toggle class="leaf-node" (click)="toggleSelected(node)" [checked]="isSelected(node)">
+      {{ node.label }}
+    </mat-button-toggle>
+  </mat-tree-node>
+
+  <!-- Expandable nodes -->
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="20">
+    <mat-button-toggle (click)="toggleSelected(node)" [checked]="isSelected(node)">
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.label">
+        <mat-icon>{{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}</mat-icon>
+      </button>
+
+      {{node.label}}
+    </mat-button-toggle>
+  </mat-tree-node>
+</mat-tree>

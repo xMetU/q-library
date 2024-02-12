@@ -1,0 +1,22 @@
+h2 {
+    text-align: center;
+    margin-top: 16px;
+    margin-bottom: 0px;
+}
+
+mat-button-toggle.mat-button-toggle {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 32px;
+    margin: 16px 12px 0px;
+    padding-right: 16px;
+
+    &.leaf-node {
+        padding-left: 16px;
+    }
+
+    ::ng-deep span.mat-button-toggle-label-content {
+        float: left;
+        padding: 0;
+    }
+}
