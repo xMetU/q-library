@@ -1,14 +1,17 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular/material/tree';
 
-import { Subscription } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { Observable, merge, mergeMap, takeUntil, tap } from 'rxjs';
 
 import { Category } from '../../interfaces/category';
-import { CategoryService } from '~/category/services/category.service';
+import { FetchAll, SetExpanded, SetSelected } from '../../state/category.actions';
+import { CategoryState } from '../../state/category.state';
+import { ReactiveDirective } from '~/shared/directives/reactive.directive';
 
 interface TreeNode {
   id: string;
@@ -52,15 +55,21 @@ class CategoryListTreeControl extends FlatTreeControl<TreeNode> {
   templateUrl: './category-list.component.html',
   styleUrl: './category-list.component.css',
 })
-export class CategoryListComponent implements OnDestroy, OnInit {
-  expanded: string[] = [];
-  selected: string[] = [];
+export class CategoryListComponent extends ReactiveDirective implements OnInit {
+  @Select(CategoryState.all)
+  $categories!: Observable<Category[]>;
 
-  private categoriesSub!: Subscription;
+  @Select(CategoryState.expanded)
+  $expanded!: Observable<string[]>;
+  expanded!: string[];
+
+  @Select(CategoryState.selected)
+  $selected!: Observable<string[]>;
+  selected!: string[];
 
   treeControl = new CategoryListTreeControl(
-    (node) => this.expanded = this.expanded.filter((s) => s != node.id),
-    (node) => this.expanded = [...this.expanded, node.id],
+    (node) => this.store.dispatch(new SetExpanded(this.expanded.filter((s) => s != node.id))),
+    (node) => this.store.dispatch(new SetExpanded([...this.expanded, node.id])),
     (node) => this.expanded.includes(node.id),
   );
   treeFlattener = new MatTreeFlattener(
@@ -71,15 +80,18 @@ export class CategoryListComponent implements OnDestroy, OnInit {
   );
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-  constructor(private categoryService: CategoryService) { }
-
-  ngOnInit() {
-    this.categoriesSub = this.categoryService.getCategories()
-      .subscribe((categories) => this.dataSource.data = categories);
+  constructor(private store: Store) {
+    super();
   }
 
-  ngOnDestroy() {
-    this.categoriesSub.unsubscribe();
+  override ngOnInit() {
+    this.store.dispatch(new FetchAll()).pipe(
+      mergeMap(() => merge(
+        this.$categories.pipe(takeUntil(this.$destroy), tap((categories) => this.dataSource.data = categories)),
+        this.$expanded.pipe(takeUntil(this.$destroy), tap((expanded) => this.expanded = expanded)),
+        this.$selected.pipe(takeUntil(this.$destroy), tap((selected) => this.selected = selected)),
+      )),
+    ).subscribe();
   }
 
   hasChild(_: number, node: TreeNode): boolean {
@@ -91,6 +103,8 @@ export class CategoryListComponent implements OnDestroy, OnInit {
   }
 
   toggleSelected(node: TreeNode) {
-    this.selected = this.isSelected(node) ? this.selected.filter((s) => s != node.id) : [...this.selected, node.id];
+    this.store.dispatch(new SetSelected(
+      this.isSelected(node) ? this.selected.filter((s) => s != node.id) : [...this.selected, node.id],
+    ));
   }
 }

@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { NgxsModule } from '@ngxs/store';
+
 import { CategoryListComponent } from './category-list.component';
 
 describe('CategoryListComponent', () => {
@@ -8,7 +10,10 @@ describe('CategoryListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CategoryListComponent],
+      imports: [
+        CategoryListComponent,
+        NgxsModule.forRoot([]),
+      ],
     })
     .compileComponents();
     
