@@ -34,13 +34,13 @@
             "style": "kebab-case"
           }
         ],
-        "semi": [
-          "error",
-          "always"
-        ],
         "comma-dangle": [
           "error",
           "always-multiline"
+        ],
+        "eol-last": [
+          "error",
+          "always"
         ],
         "import/no-unresolved": "error",
         "import/order": [
@@ -71,6 +71,10 @@
               "caseInsensitive": true
             }
           }
+        ],
+        "semi": [
+          "error",
+          "always"
         ]
       },
       "settings": {
