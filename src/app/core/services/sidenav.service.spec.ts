@@ -1,22 +1,27 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { MatSidenav } from '@angular/material/sidenav';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SidenavService } from './sidenav.service';
 
+const MOCK_SIDENAV = {
+  open: jest.fn(),
+  close: jest.fn(),
+  toggle: jest.fn(),
+};
+
 describe('SidenavService', () => {
   let service: SidenavService;
-  let fixture: ComponentFixture<MatSidenav>;
   let sidenav: MatSidenav;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule],
+      providers: [{ provide: MatSidenav, useValue: MOCK_SIDENAV }],
     });
 
     service = TestBed.inject(SidenavService);
-    fixture = TestBed.createComponent(MatSidenav);
-    sidenav = fixture.componentInstance;
+    sidenav = TestBed.inject(MatSidenav);
     service.setSidenav(sidenav);
   });
 
@@ -28,22 +33,9 @@ describe('SidenavService', () => {
     expect(service['sidenav']).toBe(sidenav);
   });
 
-  it('should open the sidenav', () => {
-    const openSpy = jest.spyOn(sidenav, 'open');
-    service.open();
-    expect(openSpy).toHaveBeenCalled();
-  });
-
-  it('should close the sidenav', () => {
-    const closeSpy = jest.spyOn(sidenav, 'close');
-    service.close();
-    expect(closeSpy).toHaveBeenCalled();
-  });
-
-  it('should toggle the sidenav', () => {
-    const toggleSpy = jest.spyOn(sidenav, 'toggle');
-    service.toggle();
-    expect(toggleSpy).toHaveBeenCalled();
+  it.each(['open', 'close', 'toggle'])('should %s the sidenav', (fnKey: string) => {
+    (service[fnKey as keyof SidenavService] as () => void)();
+    expect(sidenav[fnKey as keyof MatSidenav]).toHaveBeenCalled();
   });
 
   it('can be enabled and disabled', () => {
@@ -53,11 +45,9 @@ describe('SidenavService', () => {
     expect(service.disabled).toBe(false);
   });
 
-  it('should not interact with the sidenav when disabled', () => {
+  it.each(['open', 'close', 'toggle'])('should not %s the sidenav when disabled', (fnKey: string) => {
     service.disable();
-    const methods = [() => service.open(), () => service.close(), () => service.toggle()];
-    const spies = [jest.spyOn(sidenav, 'open'), jest.spyOn(sidenav, 'close'), jest.spyOn(sidenav, 'toggle')];
-    methods.forEach((m) => m());
-    spies.forEach((s) => expect(s).not.toHaveBeenCalled());
+    (service[fnKey as keyof SidenavService] as () => void)();
+    expect(sidenav[fnKey as keyof MatSidenav]).not.toHaveBeenCalled();
   });
 });

@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatSidenav } from '@angular/material/sidenav';
 
 import { ToolbarComponent } from './toolbar.component';
 import { SidenavService } from '../../services/sidenav.service';
 
-jest.mock('@angular/material/sidenav');
-const MockedSidenav = (MatSidenav as unknown) as jest.Mock<MatSidenav>;
+const MOCK_SIDENAV_SERVICE = {
+  disabled: false,
+  toggle: jest.fn(),
+};
 
 describe('ToolbarComponent', () => {
   let fixture: ComponentFixture<ToolbarComponent>;
@@ -15,12 +16,12 @@ describe('ToolbarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ToolbarComponent],
+      providers: [{ provide: SidenavService, useValue: MOCK_SIDENAV_SERVICE }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ToolbarComponent);
     component = fixture.componentInstance;
-    sidenavService = fixture.debugElement.injector.get(SidenavService);
-    sidenavService.setSidenav(new MockedSidenav());
+    sidenavService = TestBed.inject(SidenavService);
     fixture.detectChanges();
   });
 
@@ -28,17 +29,15 @@ describe('ToolbarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should toggle the sidenav when the button is clicked', async () => {
-    const toggleSpy = jest.spyOn(sidenavService, 'toggle');
+  it('should toggle the sidenav when the button is clicked', () => {
     fixture.debugElement.nativeElement.querySelector('button').click();
-    fixture.whenStable().then(() => expect(toggleSpy).toHaveBeenCalled());
+    expect(sidenavService.toggle).toHaveBeenCalled();
   });
 
-  it('respond to changes in sidenav state', async () => {
-    const button = fixture.debugElement.nativeElement.querySelector('button');
-    sidenavService.disable();
-    fixture.whenStable().then(() => expect(button.disabled).toBe(true));
-    sidenavService.enable();
-    fixture.whenStable().then(() => expect(button.disabled).toBe(false));
+  it('respond to changes in sidenav state', () => {
+    sidenavService.disabled = true;
+    expect(component.sidenavDisabled()).toBe(true);
+    sidenavService.disabled = false;
+    expect(component.sidenavDisabled()).toBe(false);
   });
 });
