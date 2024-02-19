@@ -9,8 +9,16 @@
 
   <!-- Expandable nodes -->
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="20">
-    <mat-button-toggle (click)="toggleSelected(node)" [checked]="isSelected(node)">
-      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.label">
+    <mat-button-toggle
+      (click)="toggleSelected(node)"
+      [checked]="isSelected(node)"
+      [attr.aria-label]="(isSelected(node) ? 'Deselect ' : 'Select ') + node.label"
+    >
+      <button
+        mat-icon-button
+        matTreeNodeToggle
+        [attr.aria-label]="(treeControl.isExpanded(node) ? 'Expand ' : 'Collapse ') + node.label"
+      >
         <mat-icon>{{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}</mat-icon>
       </button>
 

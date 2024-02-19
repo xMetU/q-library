@@ -13,7 +13,7 @@ import { FetchAll, SetExpanded, SetSelected } from '../../state/category.actions
 import { CategoryState } from '../../state/category.state';
 import { ReactiveDirective } from '~/shared/directives/reactive.directive';
 
-interface TreeNode {
+export interface TreeNode {
   id: string;
   label: string;
   expandable: boolean;
@@ -68,7 +68,7 @@ export class CategoryListComponent extends ReactiveDirective implements OnInit {
   selected!: string[];
 
   treeControl = new CategoryListTreeControl(
-    (node) => this.store.dispatch(new SetExpanded(this.expanded.filter((s) => s != node.id))),
+    (node) => this.store.dispatch(new SetExpanded(this.expanded.filter((s) => s !== node.id))),
     (node) => this.store.dispatch(new SetExpanded([...this.expanded, node.id])),
     (node) => this.expanded.includes(node.id),
   );
@@ -104,7 +104,7 @@ export class CategoryListComponent extends ReactiveDirective implements OnInit {
 
   toggleSelected(node: TreeNode) {
     this.store.dispatch(new SetSelected(
-      this.isSelected(node) ? this.selected.filter((s) => s != node.id) : [...this.selected, node.id],
+      this.isSelected(node) ? this.selected.filter((s) => s !== node.id) : [...this.selected, node.id],
     ));
   }
 }

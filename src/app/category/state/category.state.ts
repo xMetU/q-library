@@ -7,7 +7,7 @@ import { FetchAll, SetExpanded, SetSelected } from './category.actions';
 import { Category } from '../interfaces/category';
 import { CategoryService } from '../services/category.service';
 
-interface CategoryStateModel {
+export interface CategoryStateModel {
   all: Category[];
   expanded: string[];
   selected: string[];
