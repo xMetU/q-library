@@ -7,11 +7,12 @@ import { NgxsModule } from '@ngxs/store';
 
 import { routes } from './app.routes';
 import { CategoryState } from './category/state/category.state';
+import { QuizState } from './quiz/state/quiz.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(
-      NgxsModule.forRoot([CategoryState]),
+      NgxsModule.forRoot([CategoryState, QuizState]),
       NgxsStoragePluginModule.forRoot({ key: CategoryState }),
     ),
     provideAnimationsAsync(),
