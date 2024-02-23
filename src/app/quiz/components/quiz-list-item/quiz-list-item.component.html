@@ -1,0 +1,7 @@
+<h3>{{quiz.title}}</h3>
+<p>{{quiz.description}}</p>
+<button
+  mat-button
+  (click)="startQuiz()"
+  [attr.aria-label]="'attempt ' + quiz.title"
+>Attempt Quiz</button>

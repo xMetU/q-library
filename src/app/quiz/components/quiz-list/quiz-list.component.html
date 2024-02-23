@@ -1,0 +1,7 @@
+<mat-grid-list cols="4" rowHeight="200px">
+  @for (quiz of quizzes; track quiz.id) {
+    <mat-grid-tile colspan="1" rowspan="1">
+      <app-quiz-list-item [quiz]="quiz"></app-quiz-list-item>
+    </mat-grid-tile>
+  }
+</mat-grid-list>

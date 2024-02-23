@@ -1,0 +1,7 @@
+:host {
+    width: 80%;
+    height: 80%;
+    border: 1px solid grey;
+    border-radius: 20px;
+    padding: 10px;
+}
