@@ -3,14 +3,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { QuizListComponent } from './quiz-list.component';
 
 describe('QuizListComponent', () => {
-  let component: QuizListComponent;
   let fixture: ComponentFixture<QuizListComponent>;
+  let component: QuizListComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [QuizListComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
     
     fixture = TestBed.createComponent(QuizListComponent);
     component = fixture.componentInstance;

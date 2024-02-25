@@ -5,4 +5,5 @@ import { QuizListComponent } from './quiz/components/quiz-list/quiz-list.compone
 export const routes: Routes = [
   { path: '', redirectTo: 'quizzes', pathMatch: 'full' },
   { path: 'quizzes', component: QuizListComponent },
+  { path: 'quiz/:id', redirectTo: 'quizzes' },
 ];

@@ -42,8 +42,7 @@ describe('CategoryListComponent', () => {
         CategoryListComponent,
         NgxsModule.forRoot([MockCategoryState]),
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CategoryListComponent);
     component = fixture.componentInstance;

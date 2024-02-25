@@ -16,7 +16,6 @@ export class QuizListItemComponent {
   constructor(private router: Router) { }
 
   startQuiz() {
-    console.log(this.quiz.id);
-    // this.router.navigate([`quiz/${this.quiz.id}`]);
+    this.router.navigate([`quiz/${this.quiz.id}`]);
   }
 }
